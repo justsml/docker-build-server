@@ -16,7 +16,7 @@ RUN npm i -g yarn \
 
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
+  sudo build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
   libav-tools wget curl rsync git-core apt-transport-https openssl sqlite3 libsqlite3-dev \
   libyaml-dev autoconf automake libtool bison libffi-dev makedev mountall
 
