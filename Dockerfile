@@ -7,6 +7,9 @@ MAINTAINER Dan Levy <dan@danlevy.net>
 LABEL io.elph.meta.author=dan.levy
 LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
 
+# Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
+RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+
 RUN env | sort
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
