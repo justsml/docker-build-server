@@ -12,11 +12,11 @@ RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
-    build-essential sudo ca-certificates dialog imagemagick gnupg2 \
+    build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
     aufs-tools cgroupfs-mount iptables \
     curl rsync git-core apt-transport-https openssl \
     libffi-dev makedev mountall libc6-dev \
-    postgresql-client-9.4
+    postgresql-9.4
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
 
