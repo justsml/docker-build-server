@@ -16,10 +16,11 @@ RUN DEBIAN_FRONTEND=noninteractive \
 DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
     build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
-    aufs-tools cgroupfs-mount iptables \
+    aufs-tools iptables \
     curl rsync git-core apt-transport-https openssl \
     libffi-dev makedev mountall libc6-dev \
-    postgresql-9.4
+    python-software-properties software-properties-common postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4
+# cgroupfs-mount
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
 
