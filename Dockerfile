@@ -7,10 +7,12 @@ MAINTAINER Dan Levy <dan@danlevy.net>
 LABEL io.elph.meta.author=dan.levy
 LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
 
+RUN mkdir /app
+WORKDIR /app/
 
-# FOR POSTGRES: Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/update-alternatives
+# # FOR POSTGRES: Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
+# RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+# RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/update-alternatives
 
 RUN env | sort
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -27,8 +29,9 @@ DEBIAN_FRONTEND=noninteractive \
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
 
-ENV PATH /usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin::$PATH
+ENV PATH ./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH
 RUN echo 'export PATH="./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
+COPY ruby-2.1.0.tgz
 RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.0.tgz -o - | sudo tar xzf - -C /usr/local
 # COPY ./ruby-2.1.0/* /usr/local/
 # COPY ./ruby-2.1.0/bin/* /usr/local/bin/
@@ -46,10 +49,8 @@ RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.
 #         gem install rubygems-update && \
 #         update_rubygems && \
 
-RUN mkdir /app
 # USER www-data
 COPY Gemfile* /app/
-WORKDIR /app/
 RUN DEBIAN_FRONTEND=noninteractive \
      gem install bundler --no-rdoc --no-ri
 RUN bundle install --deployment
