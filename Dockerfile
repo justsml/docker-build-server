@@ -48,7 +48,7 @@ WORKDIR /tmp/
 # USER www-data
 RUN DEBIAN_FRONTEND=noninteractive \
      gem install bundler --no-rdoc --no-ri
-COPY Gemfile* /root/
+COPY Gemfile* /tmp/
 RUN bundle install
 # USER root
 
