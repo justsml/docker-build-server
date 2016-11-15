@@ -15,7 +15,8 @@ DEBIAN_FRONTEND=noninteractive \
     build-essential sudo ca-certificates dialog imagemagick gnupg2 \
     aufs-tools cgroupfs-mount iptables \
     curl rsync git-core apt-transport-https openssl \
-    libffi-dev makedev mountall libc6-dev
+    libffi-dev makedev mountall libc6-dev \
+    postgresql-client
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
 
