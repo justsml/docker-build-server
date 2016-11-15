@@ -1,5 +1,5 @@
 # FROM node:6.9
-FROM ruby:2.1.0
+FROM ruby:2.1.1
 
 MAINTAINER Dan Levy <dan@danlevy.net>
 
