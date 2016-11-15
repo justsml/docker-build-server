@@ -45,12 +45,12 @@ RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.
 #         update_rubygems && \
 WORKDIR /tmp/
 
-USER www-data
+# USER www-data
 RUN DEBIAN_FRONTEND=noninteractive \
      gem install bundler --no-rdoc --no-ri
 COPY Gemfile* /root/
 RUN bundle install
-USER root
+# USER root
 
 # RUN wget -qO- https://get.docker.com/ | sh
 RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod +x /usr/local/bin/docker
