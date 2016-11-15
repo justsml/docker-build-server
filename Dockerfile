@@ -5,16 +5,6 @@ MAINTAINER Dan Levy <dan@danlevy.net>
 
 LABEL io.elph.meta.author=dan.levy
 LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
-RUN npm i -g yarn \
-  babel-cli \
-  babel-core \
-  babel-preset-es2015 \
-  gulp-cli \
-  less \
-  less-plugin-autoprefix \
-  less-plugin-clean-css \
-  webpack
-
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   sudo build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
@@ -34,6 +24,16 @@ RUN "$NVM_DIR/nvm.sh" && nvm install 6 && nvm alias default 6
 RUN echo 'export PATH="$HOME/.yarn/bin:$PATH"' >> /etc/profile
 RUN echo 'export PATH="$HOME/.rvm/bin:$PATH"' >> /etc/profile
 RUN printf '\n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n' >> /etc/profile
+RUN "$NVM_DIR/nvm.sh" && npm i -g yarn \
+  babel-cli \
+  babel-core \
+  babel-preset-es2015 \
+  gulp-cli \
+  less \
+  less-plugin-autoprefix \
+  less-plugin-clean-css \
+  webpack
+
 # RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
 # docker run --restart=always -d --name logspout-papertrail \
 #   -v=/var/run/docker.sock:/var/run/docker.sock gliderlabs/logspout  \
