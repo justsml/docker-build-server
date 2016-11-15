@@ -24,7 +24,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
     curl -L https://get.rvm.io | bash -s ruby-2.1.3 && \
     /bin/bash -l -c "rvm requirements && gem install bundler --no-ri --no-rdoc"
-    #  && rvm mount -r https://rvm.io/binaries/ubuntu/14.04/x86_64/ruby-2.1.3.tar.bz2
+#  && rvm mount -r https://rvm.io/binaries/ubuntu/14.04/x86_64/ruby-2.1.3.tar.bz2
 
 # RUN wget -qO- https://get.docker.com/ | sh
 RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod gou+x /usr/local/bin/docker
