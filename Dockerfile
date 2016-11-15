@@ -38,7 +38,7 @@ RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.
 # RUN  DEBIAN_FRONTEND=noninteractive \
 #         gem install rubygems-update && \
 #         update_rubygems && \
-WORKDIR /root/
+WORKDIR /tmp/
 
 USER www-data
 RUN DEBIAN_FRONTEND=noninteractive \
