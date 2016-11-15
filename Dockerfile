@@ -1,5 +1,5 @@
 # FROM node:6.9
-FROM ruby:2.1.3
+FROM ruby:2.1.0
 
 MAINTAINER Dan Levy <dan@danlevy.net>
 
@@ -24,8 +24,7 @@ RUN curl -L "https://github.com/docker/compose/releases/download/1.8.1/docker-co
 ENV NVM_DIR=/usr/local/nvm
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6"
-RUN echo 'export PATH="$HOME/.yarn/bin:$PATH"' >> /etc/profile
-RUN echo 'export PATH="$HOME/.rvm/bin:$PATH"' >> /etc/profile
+RUN echo 'export PATH="$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
 RUN printf '\n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n' >> /etc/profile
 RUN /bin/bash -c 'source $NVM_DIR/nvm.sh && npm i -g yarn \
   babel-cli \
