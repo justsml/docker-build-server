@@ -31,7 +31,7 @@ DEBIAN_FRONTEND=noninteractive \
 ENV PATH ./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH
 RUN echo 'export PATH="./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
 COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
-RUN sudo tar xzf -C /usr/local /app/ruby-2.1.0.tgz
+RUN sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
 # COPY ./ruby-2.1.0/* /usr/local/
 # COPY ./ruby-2.1.0/bin/* /usr/local/bin/
 # COPY ./ruby-2.1.0/include/* /usr/local/include/
