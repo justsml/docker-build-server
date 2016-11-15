@@ -20,7 +20,7 @@ DEBIAN_FRONTEND=noninteractive \
     build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
     aufs-tools iptables libpq-dev \
     curl rsync git-core apt-transport-https openssl \
-    libffi-dev makedev mountall libc6-dev \
+    libffi-dev makedev mountall libc6-dev
 # python-software-properties software-properties-common
 # postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4
 # cgroupfs-mount
