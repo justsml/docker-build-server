@@ -11,7 +11,7 @@ gem 'multi_json', '>=1.3.x'
 
 gem 'mongoid', '>= 4.0.0.rc2'
 gem 'mongoid_paranoia', github: 'simi/mongoid_paranoia'
-gem 'pg', '~> 0.17.1'
+# gem 'pg', '~> 0.17.1'
 
 gem 'devise', '~> 3.3.0' # https://github.com/codahale/bcrypt-ruby/issues/89
 gem 'cancancan', '~> 1.12.0'

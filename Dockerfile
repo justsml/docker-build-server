@@ -20,7 +20,8 @@ DEBIAN_FRONTEND=noninteractive \
     aufs-tools iptables \
     curl rsync git-core apt-transport-https openssl \
     libffi-dev makedev mountall libc6-dev \
-    python-software-properties software-properties-common postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4
+    python-software-properties software-properties-common
+# postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4
 # cgroupfs-mount
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
@@ -46,10 +47,10 @@ RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.
 WORKDIR /tmp/
 
 # USER www-data
+COPY Gemfile* /tmp/
 RUN DEBIAN_FRONTEND=noninteractive \
      gem install bundler --no-rdoc --no-ri
-COPY Gemfile* /tmp/
-RUN bundle install
+RUN bundle install --deployment
 # USER root
 
 # RUN wget -qO- https://get.docker.com/ | sh
