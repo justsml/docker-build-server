@@ -9,6 +9,7 @@ LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
 
 # Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/update-alternatives
 
 RUN env | sort
 RUN DEBIAN_FRONTEND=noninteractive \
