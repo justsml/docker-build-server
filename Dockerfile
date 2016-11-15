@@ -14,7 +14,6 @@ WORKDIR /app/
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/update-alternatives
 
-RUN env | sort
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive \
@@ -31,8 +30,8 @@ DEBIAN_FRONTEND=noninteractive \
 
 ENV PATH ./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH
 RUN echo 'export PATH="./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
-COPY ruby-2.1.0.tgz
-RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.0.tgz -o - | sudo tar xzf - -C /usr/local
+COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
+RUN sudo tar xzf -C /usr/local /app/ruby-2.1.0.tgz
 # COPY ./ruby-2.1.0/* /usr/local/
 # COPY ./ruby-2.1.0/bin/* /usr/local/bin/
 # COPY ./ruby-2.1.0/include/* /usr/local/include/
