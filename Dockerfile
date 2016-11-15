@@ -1,37 +1,50 @@
 # FROM node:6.9
-# FROM debian:jessie-slim
-FROM debian:8
+FROM debian:jessie-slim
+# FROM debian:8
 
 MAINTAINER Dan Levy <dan@danlevy.net>
 
 LABEL io.elph.meta.author=dan.levy
 LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
 
+RUN env | sort
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
 DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
-  sudo dialog build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
-  libav-tools wget curl rsync git-core apt-transport-https openssl sqlite3 libsqlite3-dev \
-  libyaml-dev autoconf automake libtool bison libffi-dev makedev mountall libc6-dev
+    build-essential sudo ca-certificates dialog imagemagick gnupg2 \
+    aufs-tools cgroupfs-mount iptables \
+    curl rsync git-core apt-transport-https openssl \
+    libffi-dev makedev mountall libc6-dev
+# sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
+
 
 ENV PATH /usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin::$PATH
 RUN echo 'export PATH="$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
-COPY ./ruby-2.1.0/* /usr/local/
-COPY ./ruby-2.1.0/bin/* /usr/local/bin/
-COPY ./ruby-2.1.0/include/* /usr/local/include/
-COPY ./ruby-2.1.0/lib/ /usr/local/lib/
-COPY ./ruby-2.1.0/share/ /usr/local/share
+RUN curl https://s3.amazonaws.com/pkgr-buildpack-ruby/current/debian-8/ruby-2.1.0.tgz -o - | sudo tar xzf - -C /usr/local
+# COPY ./ruby-2.1.0/* /usr/local/
+# COPY ./ruby-2.1.0/bin/* /usr/local/bin/
+# COPY ./ruby-2.1.0/include/* /usr/local/include/
+# COPY ./ruby-2.1.0/lib/* /usr/local/lib/
+# COPY ./ruby-2.1.0/share/* /usr/local/share/
 
 ## Ruby/bundler stuff
-RUN gem source -r https://rubygems.org/ \
-    gem source -a http://rubygems.org/ \
-    gem update --system \
-    gem source -r http://rubygems.org/ \
-    gem source -a https://rubygems.org/ \
-    gem install bundler --no-rdoc --no-ri
+# RUN gem source -r https://rubygems.org/ && \
+#     gem source -a http://rubygems.org/ && \
+#     gem update --system && \
+#     gem source -r http://rubygems.org/ && \
+#     gem source -a https://rubygems.org/ && \
+# RUN  DEBIAN_FRONTEND=noninteractive \
+#         gem install rubygems-update && \
+#         update_rubygems && \
+WORKDIR /root/
 
+USER www-data
+RUN DEBIAN_FRONTEND=noninteractive \
+     gem install bundler --no-rdoc --no-ri
+COPY Gemfile* /root/
 RUN bundle install
+USER root
 
 # RUN wget -qO- https://get.docker.com/ | sh
 RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod +x /usr/local/bin/docker
