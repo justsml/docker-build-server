@@ -6,8 +6,11 @@ MAINTAINER Dan Levy <dan@danlevy.net>
 LABEL io.elph.meta.author=dan.levy
 LABEL io.elph.meta.base_image=elasticsuite/docker-build-server
 
-RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  sudo build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
+RUN DEBIAN_FRONTEND=noninteractive \
+  apt-get update -qq && \
+DEBIAN_FRONTEND=noninteractive \
+  apt-get install -y --no-install-recommends \
+  sudo dialog build-essential imagemagick gnupg2 aufs-tools cgroupfs-mount iptables \
   libav-tools wget curl rsync git-core apt-transport-https openssl sqlite3 libsqlite3-dev \
   libyaml-dev autoconf automake libtool bison libffi-dev makedev mountall libc6-dev
 
