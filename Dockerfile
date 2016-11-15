@@ -24,7 +24,13 @@ COPY ./ruby-2.1.0/lib/ /usr/local/lib/
 COPY ./ruby-2.1.0/share/ /usr/local/share
 
 ## Ruby/bundler stuff
-RUN gem install bundler --no-rdoc
+RUN gem source -r https://rubygems.org/ \
+    gem source -a http://rubygems.org/ \
+    gem update --system \
+    gem source -r http://rubygems.org/ \
+    gem source -a https://rubygems.org/ \
+    gem install bundler --no-rdoc --no-ri
+
 RUN bundle install
 
 # RUN wget -qO- https://get.docker.com/ | sh
