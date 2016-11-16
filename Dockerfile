@@ -42,7 +42,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
      bundle install --deployment && \
      mv vendor /
 # USER root
-
 RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod +x /usr/local/bin/docker
 RUN curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 ENV NVM_DIR=/usr/local/nvm
