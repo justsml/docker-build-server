@@ -62,9 +62,9 @@ RUN curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.
 # [ "$(which docker-compose)" == "" ] && curl -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-(uname -m)" > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && echo "Downloaded:" && docker-compose --version || echo "Already Installed:" && docker-compose --version'
 ENV NVM_DIR=/usr/local/nvm
 RUN curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-RUN source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6"
 RUN printf '\n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n' >> /etc/profile
-RUN source $NVM_DIR/nvm.sh && \
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && \
   npm i -g yarn \
   babel-cli \
   babel-core \
@@ -73,7 +73,7 @@ RUN source $NVM_DIR/nvm.sh && \
   less \
   less-plugin-autoprefix \
   less-plugin-clean-css \
-  webpack
+  webpack"
 
 # RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
 # docker run --restart=always -d --name logspout-papertrail \
