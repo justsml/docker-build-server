@@ -28,27 +28,19 @@ DEBIAN_FRONTEND=noninteractive \
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 
 
-ENV PATH ./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH
-RUN echo 'export PATH="./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
+ENV PATH /vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH
+RUN echo 'export PATH="/vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
 COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
 RUN sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
 
-## Ruby/bundler stuff
-# RUN gem source -r https://rubygems.org/ && \
-#     gem source -a http://rubygems.org/ && \
-#     gem update --system && \
-#     gem source -r http://rubygems.org/ && \
-#     gem source -a https://rubygems.org/ && \
-# RUN  DEBIAN_FRONTEND=noninteractive \
-#         gem install rubygems-update && \
-#         update_rubygems && \
-
 ENV DOCKER_OPTS="--mtu 1400"
 # USER www-data
-COPY Gemfile* /app/
+COPY Gemfile* /tmp/
+WORKDIR /tmp
 RUN DEBIAN_FRONTEND=noninteractive \
      gem install bundler --no-rdoc --no-ri && \
-     bundle install --deployment
+     bundle install --deployment && \
+     mv vendor /
 # USER root
 
 RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod +x /usr/local/bin/docker
