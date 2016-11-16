@@ -38,9 +38,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
      bundle install --deployment --jobs 4  && \
      rsync -ar vendor / && \
      printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
-     gem environment && \
+     bundle exec gem environment && \
      printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
-     gem which rails railties rack
+     bundle exec gem which rails railties rack
 WORKDIR /app
 # USER root
 ### Install docker binary ###

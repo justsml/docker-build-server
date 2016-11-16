@@ -11,4 +11,4 @@
   * Babel
 * Docker 0.12.3
 * Docker Compose 1.8.1
-* Rancher Compose
+* Rancher Compose 0.11
