@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
-gem 'rails', '~>4.1.1'
+ruby '2.1.0'
+
+gem 'rails', '>= 4.1.1', '< 4.2.x'
 gem 'sass-rails', '4.0.4' # https://github.com/rails/sass-rails/issues/191
 gem 'coffee-rails', '~>4.1.0'
 gem 'uglifier', '>=1.3'
@@ -10,7 +12,7 @@ gem 'oj', '~> 2.13.0'
 gem 'multi_json', '>=1.3.x'
 
 gem 'mongoid', '>= 4.0.0.rc2'
-gem 'mongoid_paranoia', github: 'simi/mongoid_paranoia'
+gem 'mongoid_paranoia', github: 'simi/mongoid_paranoia', tag: 'v0.2.0'
 gem 'pg', '~> 0.17.1'
 
 gem 'devise', '~> 3.3.0' # https://github.com/codahale/bcrypt-ruby/issues/89
