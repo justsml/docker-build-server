@@ -19,7 +19,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
 DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
     build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
-    aufs-tools iptables libpq-dev \
+    aufs-tools iptables libpq-dev libmagickwand-dev \
     curl rsync git-core apt-transport-https openssl \
     libffi-dev makedev mountall libc6-dev
 # python-software-properties software-properties-common
