@@ -40,7 +40,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
      printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
      bundle exec gem environment && \
      printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
-     bundle exec gem which rails railties rack
+     bundle exec gem which rails railties rack  2>/dev/null
 WORKDIR /app
 # USER root
 ### Install docker binary ###
