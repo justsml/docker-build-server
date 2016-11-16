@@ -32,11 +32,6 @@ ENV PATH ./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/loca
 RUN echo 'export PATH="./vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"' >> /etc/profile
 COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
 RUN sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
-# COPY ./ruby-2.1.0/* /usr/local/
-# COPY ./ruby-2.1.0/bin/* /usr/local/bin/
-# COPY ./ruby-2.1.0/include/* /usr/local/include/
-# COPY ./ruby-2.1.0/lib/* /usr/local/lib/
-# COPY ./ruby-2.1.0/share/* /usr/local/share/
 
 ## Ruby/bundler stuff
 # RUN gem source -r https://rubygems.org/ && \
@@ -48,18 +43,16 @@ RUN sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
 #         gem install rubygems-update && \
 #         update_rubygems && \
 
+ENV DOCKER_OPTS="--mtu 1400"
 # USER www-data
 COPY Gemfile* /app/
 RUN DEBIAN_FRONTEND=noninteractive \
-     gem install bundler --no-rdoc --no-ri
-RUN bundle install --deployment
+     gem install bundler --no-rdoc --no-ri && \
+     bundle install --deployment
 # USER root
-ENV DOCKER_OPTS="--mtu 1400"
 
-# RUN wget -qO- https://get.docker.com/ | sh
 RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && chmod +x /usr/local/bin/docker
 RUN curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
-# [ "$(which docker-compose)" == "" ] && curl -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-(uname -m)" > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && echo "Downloaded:" && docker-compose --version || echo "Already Installed:" && docker-compose --version'
 ENV NVM_DIR=/usr/local/nvm
 RUN curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6"
@@ -79,4 +72,4 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && \
 # docker run --restart=always -d --name logspout-papertrail \
 #   -v=/var/run/docker.sock:/var/run/docker.sock gliderlabs/logspout  \
 #   syslog://logs.papertrailapp.com:20634
-ENTRYPOINT echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
+RUN echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
