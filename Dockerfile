@@ -34,13 +34,15 @@ RUN printf 'export PATH="/vendor/bundle/ruby/2.1.0/bin:/app/vendor/bundle/ruby/2
 # USER www-data
 WORKDIR /tmp
 RUN DEBIAN_FRONTEND=noninteractive \
-     gem install bundler --no-rdoc --no-ri && \
-     bundle install --deployment --jobs 4  && \
-     rsync -ar vendor / && \
-     printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
-     bundle exec gem environment && \
-     printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
-     bundle exec gem which rails railties rack  2>/dev/null
+  gem install bundler --no-rdoc --no-ri && \
+  bundle install --deployment --jobs 4  && \
+  rsync -ar vendor / && \
+  printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
+  bundle exec gem environment
+  #  && \
+  # printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
+  # bundle exec gem which rails railties 2>/dev/null
+
 WORKDIR /app
 # USER root
 ### Install docker binary ###
