@@ -19,26 +19,34 @@ RUN mkdir /usr/share/man/man1 && mkdir /usr/share/man/man7 && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
     build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
-    aufs-tools iptables libmagickwand-dev \
+    aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev \
     curl rsync git-core apt-transport-https openssh-client \
     python-software-properties software-properties-common postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4 libpq-dev
     # libffi-dev libc6-dev \
 # cgroupfs-mount
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
 ### postgresql-server-dev-9.4
+WORKDIR /tmp
 COPY Gemfile* /tmp/
-COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
-RUN printf 'export PATH="/vendor/bundle/ruby/2.1.0/bin:/app/vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"\n \n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n ' >> /etc/profile && \
-    sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
+# COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
+RUN printf 'export PATH="/vendor/bundle/ruby/2.1.0/bin:/app/vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"\n \n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n ' >> /etc/profile
+#     sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
+    /bin/bash -l -c "curl -L https://get.rvm.io | bash && \
+    source /etc/profile.d/rvm.sh && \
+    rvm install 2.1.3 && rvm use 2.1.3 && \
+    gem install bundler --no-ri --no-rdoc " && \
+    printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
+    /bin/bash -l -c "bundle exec gem environment"
+    #  && bundle install --deployment --path /vendor
 
 # USER www-data
-WORKDIR /tmp
-RUN DEBIAN_FRONTEND=noninteractive \
-  gem install bundler --no-rdoc --no-ri && \
-  bundle install --deployment --jobs 4 --retry 3 && \
-  rsync -ar vendor / && \
-  printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
-  bundle exec gem environment
+# RUN DEBIAN_FRONTEND=noninteractive \
+#   gem install bundler --no-rdoc --no-ri && \
+#   bundle install --deployment --jobs 4 --retry 3 && \
+#   rsync -ar vendor / && \
+#   printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
+#   bundle exec gem environment
   #  && \
   # printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
   # bundle exec gem which rails railties 2>/dev/null
