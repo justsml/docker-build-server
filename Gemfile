@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-ruby '2.1.0'
+# ruby '2.1.0'
 
 gem 'rails', '>= 4.1.1', '< 4.2.x'
 gem 'railties', '>= 4.1.1', '< 4.2.x'
@@ -8,7 +8,7 @@ gem 'rake', '~> 10.4.2'
 gem 'oj', '~> 2.13.0'
 gem 'multi_json', '>=1.3.x'
 
-gem 'mongoid', '>= 4.0.0.rc2'
+gem 'mongoid', '>= 4.0.0.rc2', '< 6.0.0'
 gem 'mongoid_paranoia', github: 'simi/mongoid_paranoia', tag: 'v0.2.0'
 gem 'pg', '~> 0.17.1'
 
@@ -24,7 +24,6 @@ gem 'paperclip-ffmpeg', '~> 1.2.0'
 gem 'fastimage', require: false
 
 gem 'twitter', '~> 5.15.0'
-gem 'instagram', '~> 1.1.6'
 gem 'koala', '~> 2.2.0'
 gem 'omniauth-facebook', '~> 2.0.1'
 gem 'omniauth-instagram', '~> 1.0.1'
@@ -75,6 +74,7 @@ gem 'writeexcel', :require => false # orage
 gem 'htmlentities', :require => false # royal_robbins
 
 group :development, :test do
+  # gem 'rb-fsevent'
   gem 'github_api', '~> 0.12.4', :require => false
   gem 'ruby-prof', '~> 0.15.9', :require => false
   gem 'pry-rails', '~> 0.3.4'
@@ -83,7 +83,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.3.3'
   gem 'test_notifier', '~> 2.0.3'
   gem 'fabrication', '~> 2.14.1'
-  # gem 'mongoid-rspec' # not compatible with mongoid 4.x yet
   gem 'notifier', '~> 0.5.1'
   gem 'faker', '~> 1.5.0'
   gem 'capybara', '~> 2.3.0'
@@ -91,8 +90,6 @@ group :development, :test do
   gem 'selenium-webdriver', '~> 2.47.1'
   gem 'database_cleaner', '~> 1.5.0'
   gem 'spring-commands-rspec', '~> 1.0.4'
-  gem 'guard', '~> 2.13.0'
-  gem 'guard-rspec', '~> 4.6.4'
   gem 'growl', '~> 1.0.3'
   gem 'pdf-reader', '~> 1.3.3'
 end
