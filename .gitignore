@@ -28,6 +28,8 @@ build/Release
 vendor/bundle
 .bundle
 
+bindir
+
 # Dependency directories
 node_modules
 jspm_packages

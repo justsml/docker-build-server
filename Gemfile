@@ -2,10 +2,7 @@ source 'http://rubygems.org'
 ruby '2.1.0'
 
 gem 'rails', '>= 4.1.1', '< 4.2.x'
-gem 'sass-rails', '4.0.4' # https://github.com/rails/sass-rails/issues/191
-gem 'coffee-rails', '~>4.1.0'
-gem 'uglifier', '>=1.3'
-
+gem 'railties', '>= 4.1.1', '< 4.2.x'
 gem 'rake', '~> 10.4.2'
 
 gem 'oj', '~> 2.13.0'
@@ -77,17 +74,7 @@ gem 'savon', '~> 2.11.1', :require => false # oakley
 gem 'writeexcel', :require => false # orage
 gem 'htmlentities', :require => false # royal_robbins
 
-group :production, :staging do
-  gem 'ey_config', '~> 0.0.7'
-end
-
-group :staging do
-  gem 'unicorn', '~> 4.8.3'
-end
-
 group :development, :test do
-  gem 'engineyard', '~> 2.3.3'
-  # gem 'rb-fsevent'
   gem 'github_api', '~> 0.12.4', :require => false
   gem 'ruby-prof', '~> 0.15.9', :require => false
   gem 'pry-rails', '~> 0.3.4'
@@ -96,7 +83,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.3.3'
   gem 'test_notifier', '~> 2.0.3'
   gem 'fabrication', '~> 2.14.1'
-  #gem 'mongoid-rspec' # not compatible with mongoid 4.x yet
+  # gem 'mongoid-rspec' # not compatible with mongoid 4.x yet
   gem 'notifier', '~> 0.5.1'
   gem 'faker', '~> 1.5.0'
   gem 'capybara', '~> 2.3.0'
