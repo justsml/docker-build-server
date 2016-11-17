@@ -9,7 +9,7 @@ LABEL io.elph.meta.author=dan.levy \
 
 ENV PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH" \
     DOCKER_OPTS="--mtu 1400" \
-    NVM_DIR=/usr/local/nvm
+    NVM_DIR=/root/.nvm
 
 # # FOR POSTGRES: Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
