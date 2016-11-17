@@ -12,3 +12,13 @@
 * Docker 0.12.3
 * Docker Compose 1.8.1
 * Rancher Compose 0.11
+
+
+# Commands
+
+```sh
+docker build -t docker-build-server:1.1.3 .
+docker push docker-build-server:1.1.3
+
+```
+

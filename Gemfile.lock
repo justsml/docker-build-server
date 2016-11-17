@@ -553,6 +553,7 @@ DEPENDENCIES
   jquery-ui-rails (~> 5.0.5)
   koala (~> 2.2.0)
   letter_opener (~> 1.4.1)
+  minitest (>= 5.1.x)
   mongoid (>= 4.0.0.rc2, < 6.0.0)
   mongoid-paperclip (~> 0.0.10)
   mongoid_paranoia!
@@ -577,7 +578,7 @@ DEPENDENCIES
   pry-rails (~> 0.3.4)
   quick_magick (~> 0.8.0)
   rack-cors (~> 0.4.0)
-  rails (>= 4.1.1, < 4.2.x)
+  rails (>= 4.1.15)
   railties (>= 4.1.1, < 4.2.x)
   rake (~> 10.4.2)
   rspec-rails (~> 3.3.3)
