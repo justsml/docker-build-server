@@ -1,11 +1,10 @@
 source 'http://rubygems.org'
 # ruby '2.1.0'
 
-gem 'rails', '>= 4.1.15'
+gem 'rails', '4.1.15'
 gem 'railties', '>= 4.1.1', '< 4.2.x'
 gem 'rake', '~> 10.4.2'
-gem 'minitest', '>= 5.1.x'
-
+gem 'minitest', '>= 5.1.x', '< 5.9.1'
 gem 'oj', '~> 2.13.0'
 gem 'multi_json', '>=1.3.x'
 
