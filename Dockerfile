@@ -7,7 +7,7 @@ MAINTAINER Dan Levy <dan@danlevy.net>
 LABEL io.elph.meta.author=dan.levy \
       io.elph.meta.base_image=elasticsuite/docker-build-server
 
-ENV PATH="/vendor/bundle/ruby/2.1.0/bin:/app/vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH" \
+ENV PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH" \
     DOCKER_OPTS="--mtu 1400" \
     NVM_DIR=/usr/local/nvm
 
@@ -28,9 +28,9 @@ RUN mkdir /usr/share/man/man1 && mkdir /usr/share/man/man7 && \
 ### postgresql-server-dev-9.4
 WORKDIR /tmp
 COPY Gemfile* /tmp/
-# COPY ruby-2.1.0.tgz /app/ruby-2.1.0.tgz
-RUN printf 'export PATH="/vendor/bundle/ruby/2.1.0/bin:/app/vendor/bundle/ruby/2.1.0/bin:$HOME/.rvm/bin:$HOME/.yarn/bin:/usr/local/bin:$PATH"\n \n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n ' >> /etc/profile
-#     sudo tar -xvf /app/ruby-2.1.0.tgz -C /usr/local
+# COPY ruby-2.1.3.tgz /app/ruby-2.1.3.tgz
+RUN printf 'export PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:$PATH"\n \n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n ' >> /etc/profile
+#     sudo tar -xvf /app/ruby-2.1.3.tgz -C /usr/local
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
     /bin/bash -l -c "curl -L https://get.rvm.io | bash && \
     source /etc/profile.d/rvm.sh && \
