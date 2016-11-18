@@ -1,11 +1,60 @@
 # FROM node:6.9
-FROM debian:jessie-slim
+# FROM debian:jessie-slim
 # FROM debian:8
+FROM ubuntu:16.04
 
 MAINTAINER Dan Levy <dan@danlevy.net>
 
 LABEL io.elph.meta.author=dan.levy \
       io.elph.meta.base_image=elasticsuite/docker-build-server
+
+# apt-get install software-properties-common python-software-properties
+
+# a few minor docker-specific tweaks
+# see https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap
+RUN set -xe \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L40-L48
+  && echo '#!/bin/sh' > /usr/sbin/policy-rc.d \
+  && echo 'exit 101' >> /usr/sbin/policy-rc.d \
+  && chmod +x /usr/sbin/policy-rc.d \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L54-L56
+  && dpkg-divert --local --rename --add /sbin/initctl \
+  && cp -a /usr/sbin/policy-rc.d /sbin/initctl \
+  && sed -i 's/^exit.*/exit 0/' /sbin/initctl \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L71-L78
+  && echo 'force-unsafe-io' > /etc/dpkg/dpkg.cfg.d/docker-apt-speedup \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L85-L105
+  && echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > /etc/apt/apt.conf.d/docker-clean \
+  && echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> /etc/apt/apt.conf.d/docker-clean \
+  && echo 'Dir::Cache::pkgcache ""; Dir::Cache::srcpkgcache "";' >> /etc/apt/apt.conf.d/docker-clean \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L109-L115
+  && echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/docker-no-languages \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L118-L130
+  && echo 'Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/docker-gzip-indexes \
+  \
+# https://github.com/docker/docker/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contrib/mkimage/debootstrap#L134-L151
+  && echo 'Apt::AutoRemove::SuggestsImportant "false";' > /etc/apt/apt.conf.d/docker-autoremove-suggests
+
+# delete all the apt list files since they're big and get stale quickly
+RUN rm -rf /var/lib/apt/lists/*
+# this forces "apt-get update" in dependent images, which is also good
+
+# enable the universe
+RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
+
+# # make systemd-detect-virt return "docker"
+# # See: https://github.com/systemd/systemd/blob/aa0c34279ee40bce2f9681b496922dedbadfca19/src/basic/virt.c#L434
+# RUN mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
+
+# # overwrite this with 'CMD []' in a dependent Dockerfile
+# CMD ["/bin/bash"]
+
 
 ENV PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH" \
     DOCKER_OPTS="--mtu 1400" \
@@ -14,14 +63,14 @@ ENV PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/
 # # FOR POSTGRES: Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/update-alternatives
-RUN mkdir /usr/share/man/man1 && mkdir /usr/share/man/man7 && \
-    apt-get update -qq && \
+RUN mkdir -p /usr/share/man/man1 && mkdir -p /usr/share/man/man7 && \
+    apt update -qq && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y --no-install-recommends \
-    build-essential apt-utils sudo ca-certificates dialog imagemagick gnupg2 \
+    apt install -y --no-install-recommends \
+    build-essential apt-utils lsof sudo ca-certificates dialog imagemagick gnupg2 \
     aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev \
     curl rsync git-core apt-transport-https openssh-client \
-    python-software-properties software-properties-common postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4 libpq-dev
+    python-software-properties software-properties-common postgresql-9.5 libpq-dev
     # libffi-dev libc6-dev \
 # cgroupfs-mount
 # sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
@@ -35,10 +84,16 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A170311380
     /bin/bash -l -c "curl -L https://get.rvm.io | bash && \
     source /etc/profile.d/rvm.sh && \
     rvm get head && rvm install 2.1.3 && rvm use 2.1.3 && \
-    gem install bundler --no-ri --no-rdoc " && \
+    gem install bundler --no-ri --no-rdoc && \
     printf '\n#################\nGEM DEBUG INFO\n##############\n\n' && \
-    /bin/bash -l -c "bundle exec gem environment"
+    gem environment"
+
     #  && bundle install --deployment --path /vendor
+
+    # bundle install  --deployment \
+    #                 --jobs 8 \
+    #                 --retry 3 \
+    #                 --path /vendor
 
 # USER www-data
 # RUN DEBIAN_FRONTEND=noninteractive \
@@ -59,19 +114,24 @@ RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.1
     chmod +x /usr/local/bin/docker && \
     ### Same deal, install docker-compose ###
     curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose
     ### Now Node/Npm/NVM
-    curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
-    /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && \
-  npm i -g yarn \
-  babel-cli \
-  babel-core \
-  babel-preset-es2015 \
-  gulp-cli \
-  less \
-  less-plugin-autoprefix \
-  less-plugin-clean-css \
-  webpack"
+RUN /bin/bash -l -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
+    source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6 && \
+    echo $(which node)"
+# RUN /bin/bash -x -l -c "source $NVM_DIR/nvm.sh && \
+#   echo $(which node) && \
+#   sudo chmod -Rfc 755 $(which node) && \
+#   sudo chmod -Rfc 755 $(which npm) && \
+#   npm i -g yarn \
+#   babel-cli \
+#   babel-core \
+#   babel-preset-es2015 \
+#   gulp-cli \
+#   less \
+#   less-plugin-autoprefix \
+#   less-plugin-clean-css \
+#   webpack"
 
 # RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
 # docker run --restart=always -d --name logspout-papertrail \
