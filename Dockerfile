@@ -117,8 +117,9 @@ RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.1
     chmod +x /usr/local/bin/docker-compose
     ### Now Node/Npm/NVM
 RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
-    source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6 && \
-    if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
+    source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6"
+    #  && \
+    # if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
 
   # npm config set user 0 && \
   # npm config set unsafe-perm true && \
