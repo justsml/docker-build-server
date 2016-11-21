@@ -58,7 +58,7 @@ RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
 
 ENV PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH" \
     DOCKER_OPTS="--mtu 1400" \
-    NVM_DIR=/root/.nvm
+    NVM_DIR=/usr/local/nvm
 
 # # FOR POSTGRES: Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
 # RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
@@ -68,12 +68,11 @@ RUN mkdir -p /usr/share/man/man1 && mkdir -p /usr/share/man/man7 && \
     DEBIAN_FRONTEND=noninteractive \
     apt install -y --no-install-recommends \
     build-essential apt-utils lsof sudo ca-certificates dialog imagemagick gnupg2 \
-    aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev \
-    curl rsync git-core apt-transport-https openssh-client \
+    aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev gnutls-bin sqlite3 libsqlite3-dev \
+    curl rsync git-core apt-transport-https openssh-client libcurl3-openssl-dev libyaml-dev \
     python-software-properties software-properties-common postgresql-9.5 libpq-dev
-    # libffi-dev libc6-dev \
 # cgroupfs-mount
-# sqlite3 libsqlite3-dev libyaml-dev autoconf automake libtool bison
+# autoconf automake libtool bison
 ### postgresql-server-dev-9.4
 WORKDIR /tmp
 COPY Gemfile* /tmp/
@@ -119,19 +118,26 @@ RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.1
 RUN /bin/bash -l -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
     source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6 && \
     echo $(which node)"
-# RUN /bin/bash -x -l -c "source $NVM_DIR/nvm.sh && \
-#   echo $(which node) && \
-#   sudo chmod -Rfc 755 $(which node) && \
-#   sudo chmod -Rfc 755 $(which npm) && \
-#   npm i -g yarn \
-#   babel-cli \
-#   babel-core \
-#   babel-preset-es2015 \
-#   gulp-cli \
-#   less \
-#   less-plugin-autoprefix \
-#   less-plugin-clean-css \
-#   webpack"
+
+  # npm config set user 0 && \
+  # npm config set unsafe-perm true && \
+
+RUN /bin/bash -x -l -c "source $NVM_DIR/nvm.sh && \
+  echo $(which nvm) && \
+  echo $(which node) && \
+  sudo chmod -Rfc 755 $(which node) && \
+  sudo chmod -Rfc 755 $(which npm) && \
+  npm i -g yarn \
+  babel-cli \
+  babel-core \
+  babel-preset-es2015 \
+  gulp-cli \
+  less \
+  less-plugin-autoprefix \
+  less-plugin-clean-css \
+  webpack"
+
+# https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
 
 # RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
 # docker run --restart=always -d --name logspout-papertrail \
