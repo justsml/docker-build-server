@@ -70,9 +70,10 @@ RUN mkdir -p /usr/share/man/man1 && mkdir -p /usr/share/man/man7 && \
     build-essential apt-utils lsof sudo ca-certificates dialog imagemagick gnupg2 \
     aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev gnutls-bin sqlite3 libsqlite3-dev \
     curl rsync git-core apt-transport-https openssh-client libcurl3-openssl-dev libyaml-dev \
-    python-software-properties software-properties-common postgresql-9.5 libpq-dev
+    python-software-properties software-properties-common postgresql-9.5 libpq-dev gawk \
+    libreadline6-dev autoconf libgmp-dev libgdbm-dev libncurses5-dev automake libtool bison
+    # reqs for ruby v2.1.x: gawk, libreadline6-dev, autoconf, libgmp-dev, libgdbm-dev, libncurses5-dev, automake, libtool, bison
 # cgroupfs-mount
-# autoconf automake libtool bison
 ### postgresql-server-dev-9.4
 WORKDIR /tmp
 COPY Gemfile* /tmp/
@@ -80,7 +81,7 @@ COPY Gemfile* /tmp/
 RUN printf 'export PATH="/vendor/bundle/ruby/2.1.3/bin:/app/vendor/bundle/ruby/2.1.3/bin:/root/.rvm/bin:/root/.yarn/bin:/usr/local/bin:$PATH"\n \n[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"\n ' >> /etc/profile
 #     sudo tar -xvf /app/ruby-2.1.3.tgz -C /usr/local
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
-    /bin/bash -l -c "curl -L https://get.rvm.io | bash && \
+    /bin/bash -c "curl -L https://get.rvm.io | bash && \
     source /etc/profile.d/rvm.sh && \
     rvm get head && rvm install 2.1.3 && rvm use 2.1.3 && \
     gem install bundler --no-ri --no-rdoc && \
@@ -115,32 +116,32 @@ RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.1
     curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
     ### Now Node/Npm/NVM
-RUN /bin/bash -l -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
+RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
     source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6 && \
-    echo $(which node)"
+    if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
 
   # npm config set user 0 && \
   # npm config set unsafe-perm true && \
 
-RUN /bin/bash -x -l -c "source $NVM_DIR/nvm.sh && \
-  echo $(which nvm) && \
-  echo $(which node) && \
-  sudo chmod -Rfc 755 $(which node) && \
-  sudo chmod -Rfc 755 $(which npm) && \
-  npm i -g yarn \
-  babel-cli \
-  babel-core \
-  babel-preset-es2015 \
-  gulp-cli \
-  less \
-  less-plugin-autoprefix \
-  less-plugin-clean-css \
-  webpack"
+# RUN /bin/bash -x -c "source $NVM_DIR/nvm.sh && \
+#   printf \" PATH: $PATH  \n nvm path: $(which nvm) \" && \
+#   echo $(which node) && \
+#   sudo chmod -Rfc 755 $(which node) && \
+#   sudo chmod -Rfc 755 $(which npm) && \
+#   npm i -g yarn \
+#   babel-cli \
+#   babel-core \
+#   babel-preset-es2015 \
+#   gulp-cli \
+#   less \
+#   less-plugin-autoprefix \
+#   less-plugin-clean-css \
+#   webpack"
 
 # https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
 
-# RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
-# docker run --restart=always -d --name logspout-papertrail \
+RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
+# docker run --restart=unless-stopped -d --name logspout-papertrail \
 #   -v=/var/run/docker.sock:/var/run/docker.sock gliderlabs/logspout  \
 #   syslog://logs.papertrailapp.com:20634
 RUN echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
