@@ -67,7 +67,7 @@ RUN mkdir -p /usr/share/man/man1 && mkdir -p /usr/share/man/man7 && \
     apt update -qq && \
     DEBIAN_FRONTEND=noninteractive \
     apt install -y --no-install-recommends \
-    build-essential apt-utils lsof sudo ca-certificates dialog imagemagick gnupg2 \
+    build-essential apt-utils lsof sudo ca-certificates dialog gettext imagemagick gnupg2 \
     aufs-tools iptables libmagickwand-dev libc6-dev libffi-dev gnutls-bin sqlite3 libsqlite3-dev \
     curl rsync git-core apt-transport-https openssh-client libcurl3-openssl-dev libyaml-dev \
     python-software-properties software-properties-common postgresql-9.5 libpq-dev gawk \
@@ -141,8 +141,4 @@ RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creation
 
 # https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
 
-RUN echo '*.*          @logs.papertrailapp.com:20634' >> /etc/rsyslog.conf
-# docker run --restart=unless-stopped -d --name logspout-papertrail \
-#   -v=/var/run/docker.sock:/var/run/docker.sock gliderlabs/logspout  \
-#   syslog://logs.papertrailapp.com:20634
 RUN echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
