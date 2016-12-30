@@ -109,14 +109,14 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A170311380
 WORKDIR /app
 # USER root
 ### Install docker binary ###
-RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && \
-    tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && \
+RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.5.tgz && \
+    tar --strip-components=1 -xvzf docker-1.12.5.tgz -C /usr/local/bin && \
     chmod +x /usr/local/bin/docker && \
     ### Same deal, install docker-compose ###
-    curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
+    curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose && \
     ### Now Node/Npm/NVM
-RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
+    /bin/bash -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
     source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6"
     #  && \
     # if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
@@ -141,4 +141,4 @@ RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creation
 
 # https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
 
-RUN echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
+# RUN echo "WARN: INHERIT/OVERRIDE THIS DOCKER IMAGE - SET ENTRYPOINT!"
