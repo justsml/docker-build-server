@@ -105,20 +105,26 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A170311380
   #  && \
   # printf '\n#################\nRAILS PKG LOCATIONS\n##############\n\n' && \
   # bundle exec gem which rails railties 2>/dev/null
+ENV RANCHER_COMPOSE_VERSION=0.12.1 \
+    DOCKER_COMPOSE_VERSION=1.9.0 \
+    DOCKER_VERSION=1.12.5
 
 WORKDIR /app
 # USER root
 ### Install docker binary ###
-RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.3.tgz && \
-    tar --strip-components=1 -xvzf docker-1.12.3.tgz -C /usr/local/bin && \
+RUN curl --insecure -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-$DOCKER_VERSION.tgz && \
+    tar --strip-components=1 -xzf docker-$DOCKER_VERSION.tgz -C /usr/local/bin && \
     chmod +x /usr/local/bin/docker && \
     ### Same deal, install docker-compose ###
-    curl --insecure -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose
+    curl --insecure -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose &&
+    sudo curl -L "https://github.com/rancher/rancher-compose/releases/download/$RANCHER_COMPOSE_VERSION/rancher-compose-linux-amd64-$RANCHER_COMPOSE_VERSION.tar.gz" > /tmp/rancher-compose.tar.gz && \
+    sudo tar -xzf /tmp/rancher-compose.tar.gz -C /tmp/ && \
+    sudo mv /tmp/rancher-compose-$RANCHER_COMPOSE_VERSION/rancher-compose /usr/local/bin && \
+    sudo chmod +x /usr/local/bin/rancher-compose && \
     ### Now Node/Npm/NVM
-RUN /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
+    /bin/bash -c "curl --insecure -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
     source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6"
-    #  && \
     # if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
 
   # npm config set user 0 && \
