@@ -109,17 +109,23 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A170311380
 WORKDIR /app
 # USER root
 ### Install docker binary ###
-RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.12.5.tgz && \
-    tar --strip-components=1 -xvzf docker-1.12.5.tgz -C /usr/local/bin && \
+RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.13.1.tgz && \
+    tar --strip-components=1 -xvzf docker-1.13.1.tgz -C /usr/local/bin && \
     chmod +x /usr/local/bin/docker && \
     ### Same deal, install docker-compose ###
-    curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
+    curl -L "https://github.com/docker/compose/releases/download/1.11.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose && \
     ### Now Node/Npm/NVM
     /bin/bash -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
     source $NVM_DIR/nvm.sh && nvm install 6 && nvm alias default 6 && nvm use 6"
     #  && \
     # if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
+  # check rancher-compose
+RUN sudo curl -L "https://github.com/rancher/rancher-compose/releases/download/v0.12.1/rancher-compose-linux-amd64-v0.12.1.tar.gz" > /tmp/rancher-compose.tar.gz && \
+    sudo tar -xzf /tmp/rancher-compose.tar.gz -C /tmp/ && \
+    sudo mv /tmp/rancher-compose-v0.12.1/rancher-compose /usr/local/bin && \
+    sudo chmod +x /usr/local/bin/rancher-compose && \
+    echo "Downloaded: $(rancher-compose --version)"
 
   # npm config set user 0 && \
   # npm config set unsafe-perm true && \
