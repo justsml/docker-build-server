@@ -121,9 +121,9 @@ RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-1.13.1.tgz && 
     #  && \
     # if [ -f \"$(which node)\" ]; then\n    ln -s \"$(which node)\" /usr/local/bin/node\nfi"
   # check rancher-compose
-RUN sudo curl -L "https://github.com/rancher/rancher-compose/releases/download/v0.12.1/rancher-compose-linux-amd64-v0.12.1.tar.gz" > /tmp/rancher-compose.tar.gz && \
+RUN sudo curl -L "https://github.com/rancher/rancher-compose/releases/download/v0.12.2/rancher-compose-linux-amd64-v0.12.2.tar.gz" > /tmp/rancher-compose.tar.gz && \
     sudo tar -xzf /tmp/rancher-compose.tar.gz -C /tmp/ && \
-    sudo mv /tmp/rancher-compose-v0.12.1/rancher-compose /usr/local/bin && \
+    sudo mv /tmp/rancher-compose-v0.12.2/rancher-compose /usr/local/bin && \
     sudo chmod +x /usr/local/bin/rancher-compose && \
     echo "Downloaded: $(rancher-compose --version)"
 
